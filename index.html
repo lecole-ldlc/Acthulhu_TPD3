@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="custom.css">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Bitter"/>
     <title>Acthulhu - dataviz</title>
@@ -100,12 +99,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-5">
-                <svg id="barcharttask" width="550" height="400"></svg>
+                <svg id="barcharttask" width="430" height="400"></svg>
             </div>
             <div class="col-lg-2">
             </div>
             <div class="col-lg-5">
-                <svg id="barcharttime" width="550" height="400"></svg>
+                <svg id="barcharttime" width="430" height="400"></svg>
             </div>
         </div>
     </div>
@@ -129,14 +128,6 @@
         </div>
     </div>
 
-    <div class="container test-integration-d3">
-        <div class="row">
-            <div class="col-lg-12">
-                <svg id="test" width="900" height="400"></svg>
-            </div>
-        </div>
-    </div>
-
 </div><!-- /.container -->
 
 <!-- Bootstrap core JavaScript
@@ -145,111 +136,18 @@
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
         integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
         crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
         integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 
+<script src="js/barcharttask.js" type="text/javascript"></script>
+<script src="js/barcharttime.js" type="text/javascript"></script>
 <script type="text/javascript">
-    console.log("COUCOU");
-      // Chart initialization
-  	var svg = d3.select("#barcharttask"),
-    margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + 	margin.top + ")");
-    console.log(g);
-  	// X axis
-    var x = d3.scaleBand()
-      .rangeRound([0, width])
-      .paddingInner(0.1);
-
-  	// y axis
-    var y = d3.scaleLinear()
-      .rangeRound([height, 0]);
-
-  	//load data
-    d3.csv("data/data_task_100.csv", function(data){
-     	console.log(data);
-
-      // Group by status
-      var nested_data = d3.nest()
-				.key(function(d) { return d.status; })
-      	.rollup(function(d){
-          return d3.sum(d, function(g){
-            return g.time
-          })
-        })
-				.entries(data);
-
-      nested_data.forEach(function(d){
-        d.status = d.key;
-        d.sumtime = d.value;
-      })
-      console.log(nested_data);
-      //console.log(nested_data);
-
-      // Color scale
-      var z = d3.scaleOrdinal(d3.schemeCategory10);
-
-      // Set domains of axes scales
-      x.domain(nested_data.map(function(d) { return d.key; }));
-      y.domain([0, d3.max(nested_data, function(d) { return d.sumtime; })]);
-      z.domain(nested_data.map(function(d) { return d.key; }))
-
-      // Draw rect
-      g.selectAll("rect")
-    	.data(nested_data)
-    	.enter().append("rect")
-      .attr("x", function(d) { return x(d.key); })
-      .attr("y", function(d) { return y(d.sumtime); })
-      .attr("height", function(d) { return height - y(d.sumtime);})
-      .attr("width", x.bandwidth())
-      //.attr("fill", "red")
-      .attr("fill", function(d,i) { return z(d.key); })
-      .on("mouseover", function() { tooltip.style("display", null); })
-  		.on("mouseout", function() { tooltip.style("display", "none"); })
-      .on("mousemove", function(d) {
-    		var xPosition = d3.mouse(this)[0] - 0;
-    		var yPosition = d3.mouse(this)[1] - 25;
-    		tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-    		tooltip.select("text").text(d.sumtime);
-       });
-
-
-      // Draw x axis
-      g.append("g")
-      .attr("class", "axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-
-      // Draw y axis
-  		g.append("g")
-      	.attr("class", "axis")
-      	.call(d3.axisLeft(y).ticks(null, "s"))
-
-
-
+    $(function () {
+        console.log("TEST");
+        barcharttask();
+        barcharttime();
     });
-		// Prep the tooltip bits, initial display is hidden
-		var tooltip = svg.append("g")
-  		.attr("class", "tooltip")
-  		.style("display", "none");
-
-		tooltip.append("rect")
-  		.attr("width", 30)
-  		.attr("height", 20)
-  		.attr("fill", "white")
-  		.style("opacity", 0.5);
-
-		tooltip.append("text")
-  		.attr("x", 15)
-  		.attr("dy", "1.2em")
-  		.style("text-anchor", "middle")
-  		.attr("font-size", "12px")
-  		.attr("font-weight", "bold");
-
 </script>
 </body>
 
