@@ -68,8 +68,6 @@ function draw_barchart(data, element, total) {
       	.attr("class", "axis")
       	.call(d3.axisLeft(y).ticks(null, "s"))
 
-
-
 }
-		// Prep the tooltip bits, initial display is hidden
+
 
