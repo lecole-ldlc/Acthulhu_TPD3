@@ -342,33 +342,9 @@
 
                     return 'translate(' + horz + ',' + vert + ')';
                 });
-        var simulation = d3.forceSimulation(node)
-                .velocityDecay(0.2)
-                .force("x", d3.forceX().strength(0.002))
-                .force("y", d3.forceY().strength(0.002))
-                .force("collide", d3.forceCollide().radius(function (d) {
-                    return d.r + 0.5;
-                }).iterations(2))
-                .on('tick', ticked);
-        }
-    function ticked() {
-            context.clearRect(0, 0, width, height);
-            context.save();
-            context.translate(width / 2, height / 2);
-
-            context.beginPath();
-            node.forEach(function (d) {
-                context.moveTo(d.x + d.r, d.y);
-                context.arc(d.x, d.y, d.r, 0, tau);
-            });
-            context.fillStyle = "#ddd";
-            context.fill();
-            context.strokeStyle = "#333";
-            context.stroke();
-
-            context.restore();
 
         }
+
 
 </script>
 <script>
