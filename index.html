@@ -230,20 +230,21 @@
                 .text(function (d) {
                     return "Total time : " + d.data.value.total_time;
                 });
-        var heightL = 100;
-        var svgLeg = d3.select("#legend").append("svg")
-                .attr("width", width)
-                .attr("height", heightL)
+  //      var heightL = 0//;
+  //      var svgLeg = d3.select("#legend").append("svg")
+  //              .attr("width", width)
+  //              .attr("height", heightL)
+
         // Draw the legend
         var legendRectSize = 18;
-        var legendSpacing = 4;
+  //      var legendSpacing = 4;
         var legend = svg.selectAll('.legend')
                 .data(color.domain())
                 .enter()
                 .append('g')
                 .attr('class', 'legend')
                 .attr('transform', function (d, i) {
-                    var offset = 20 * color.domain().length / 2;
+   //                 var offset = 20 * color.domain().length / 2;
                     var horz = 30 + i * 100 + 10;
                     var vert = height + legendRectSize + 10;
                     //vert = 0;
@@ -259,7 +260,7 @@
         // These are the texts
         legend.append('text')
                 .attr('x', legendRectSize + 5)
-                .attr('y', 10)
+                .attr('y', 15)
                 .text(function (d) {
                     return d
                 })
@@ -311,25 +312,24 @@
                 });
         node.append("title")
                 .text(function (d) {
-                    return d.data.id + "\n" + d.data.priority;
+                    return d.data.who + "\n" + d.data.priority;
                 });
 
         //Legend area creation
         var legendSize = 14;
-        var legendSpacing = 4;
+  //      var legendSpacing = 4;
         var legend = svg.selectAll('.legend')
                 .data(color.domain())
                 .enter()
                 .append('g')
                 .attr('class', 'legend')//
                 .attr('transform', function (d, i) {
-                    var offset = 20 * color.domain().length / 2;
+  //                  var offset = 20 * color.domain().length / 2;
                     var horz = 30 + i * 100 + 10;
                     var vert = 15;
-
-
                     return 'translate(' + horz + ',' + vert + ')';
                 });
+
         // Circles creation and color filling
         legend.append('circle')
                 .attr('r', legendSize)
@@ -338,7 +338,7 @@
         // Texts creation and placement
         legend.append('text')
                 .attr('x', legendSize + 5)
-                .attr('y', 10)
+                .attr('y', 5)
                 .text(function (d) {
                     return d
                 })
@@ -347,6 +347,7 @@
 
 </script>
 <script>
+    //Onchange function
     function regen(){
         d3.csv($('#csv').val(), function (d){
             var user = $("#user").val();
