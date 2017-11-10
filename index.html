@@ -71,6 +71,11 @@
 
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12">
+                Number of tasks : <span id="task_count">?</span>
+            </div>
+        </div>
     </div>
 
     <!-- Areas creation -->
@@ -80,7 +85,7 @@
                 <p class="border-test">Nombre de tâches en fonction de la priorité</p>
                 <svg id="barcharttask" width="430" height="400"></svg>
             </div>
-            <div class="col-lg-1">
+            <div class="col-lg-2">
             </div>
             <div class="col-lg-5">
                 <p class="border-test">Temps necessaire aux tâches en fonction du statut</p>
@@ -230,21 +235,21 @@
                 .text(function (d) {
                     return "Total time : " + d.data.value.total_time;
                 });
-  //      var heightL = 0//;
-  //      var svgLeg = d3.select("#legend").append("svg")
-  //              .attr("width", width)
-  //              .attr("height", heightL)
+        //      var heightL = 0//;
+        //      var svgLeg = d3.select("#legend").append("svg")
+        //              .attr("width", width)
+        //              .attr("height", heightL)
 
         // Draw the legend
         var legendRectSize = 18;
-  //      var legendSpacing = 4;
+        //      var legendSpacing = 4;
         var legend = svg.selectAll('.legend')
                 .data(color.domain())
                 .enter()
                 .append('g')
                 .attr('class', 'legend')
                 .attr('transform', function (d, i) {
-   //                 var offset = 20 * color.domain().length / 2;
+                    //                 var offset = 20 * color.domain().length / 2;
                     var horz = 30 + i * 100 + 10;
                     var vert = height + legendRectSize + 10;
                     //vert = 0;
@@ -317,14 +322,14 @@
 
         //Legend area creation
         var legendSize = 14;
-  //      var legendSpacing = 4;
+        //      var legendSpacing = 4;
         var legend = svg.selectAll('.legend')
                 .data(color.domain())
                 .enter()
                 .append('g')
                 .attr('class', 'legend')//
                 .attr('transform', function (d, i) {
-  //                  var offset = 20 * color.domain().length / 2;
+                    //                  var offset = 20 * color.domain().length / 2;
                     var horz = 30 + i * 100 + 10;
                     var vert = 15;
                     return 'translate(' + horz + ',' + vert + ')';
@@ -354,10 +359,13 @@
             if (d.who == user || user =='all')
                 return d;
         }, function (data){
+
+            $("#task_count").html(data.length.toString());
             generate_tree(data, '#treemap');
             surprise(data, '#surprise');
             draw_barchart(data, "#barcharttask", true);
             draw_barchart(data, "#barcharttime", false);
+
 
         });
     }

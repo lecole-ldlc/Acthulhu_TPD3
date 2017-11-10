@@ -19,29 +19,38 @@ function draw_barchart(data, element, total) {
       .rangeRound([height, 0]);
 
   	//load data
+    var group_by;
     if(!total) {
         // Group by status
-        var nested_data = d3.nest()
-            .key(function (d) {
-                return d.status;
-            })
-            .entries(data);
+        group_by = 'status'
     }
     else {
-        var nested_data = d3.nest()
-            .key(function (d) {
-                return d.priority;
-            })
-            .entries(data);
+        group_by = 'priority'
     }
-      //console.log(nested_data);
+
+    var nested_data = d3.nest()
+            .key(function (d) {
+                return d[group_by];
+            })
+             .rollup(function (leaves) {
+                    return {
+                        "total_cpt": leaves.length, // Compute the number of tasks in each groupe
+                        // Compute the total time associated with the tasks in this group
+                        "total_time": d3.sum(leaves, function (d) {
+                            return parseFloat(d.time);
+                        })
+                    }
+                })
+            .entries(data);
+
+      console.log(nested_data);
 
       // Color scale
       var z = d3.scaleOrdinal(d3.schemeCategory10);
 
       // Set domains of axes scales
       x.domain(nested_data.map(function(d) { return d.key; }));
-      y.domain([0, d3.max(nested_data, function(d) { return d.values.length; })]);
+      y.domain([0, d3.max(nested_data, function(d) { return d.value.total_time; })]);
       z.domain(nested_data.map(function(d) { return d.key; }))
 
       // Draw rect
@@ -49,8 +58,8 @@ function draw_barchart(data, element, total) {
     	.data(nested_data)
     	.enter().append("rect")
       .attr("x", function(d) { return x(d.key); })
-      .attr("y", function(d) { return y(d.values.length); })
-      .attr("height", function(d) { return height - y(d.values.length);})
+      .attr("y", function(d) { return y(d.value.total_time); })
+      .attr("height", function(d) { return height - y(d.value.total_time);})
       .attr("width", x.bandwidth())
       //.attr("fill", "red")
       .attr("fill", function(d,i) { return z(d.key); })
