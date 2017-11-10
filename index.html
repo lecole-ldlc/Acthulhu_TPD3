@@ -8,8 +8,8 @@
     <title>Acthulhu - dataviz</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-        integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
-        crossorigin="anonymous"></script>
+            integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+            crossorigin="anonymous"></script>
     <script src="js/barcharttime.js"></script>
 </head>
 
@@ -73,21 +73,6 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-lg-2">
-            </div>
-            <div class="col-lg-4">
-                <p>Number of tasks</p>
-            </div>
-            <div class="col-lg-4">
-                <input type="text" class="form-control" id="usr">
-            </div>
-            <div class="col-lg-2">
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="row">
             <div class="col-lg-1">
             </div>
             <div class="col-lg-4">
@@ -126,7 +111,7 @@
     </div>
 
     <div class="container">
-        <div class="row">
+        <div class="row" id="oui">
             <div class="col-lg-12">
                 <p class="border-test">
                     FREECHART<br>
@@ -247,7 +232,7 @@
                     return d.data.key;
                 })
                 .attr("x", 4)
-                .attr("y", 10);
+                .attr("y", 20);
         // Append a title (shown on mouse hover)
         cell.append("title")
                 .text(function (d) {
@@ -306,6 +291,7 @@
                 .sum(function (d) {
                     return d.time;
                 });
+
         var node = svg.selectAll(".node")
                 .data(pack(root).leaves())
                 .enter().append("g")
@@ -328,38 +314,52 @@
                     return d.data.id + "\n" + d.data.priority;
                 });
 
-        var legendRectSize = 18;
-        var legendSpacing = 4;
-        var legend = svg.selectAll('.legend')
-                .data(color.domain())
-                .enter()
-                .append('g')
-                .attr('class', 'legend')
-                .attr('transform', function (d, i) {
-                    var offset = 20 * color.domain().length / 2;
-                    var horz = 30 + i * 100 + 10;
-                    var vert = 0;
 
-                    return 'translate(' + horz + ',' + vert + ')';
-                });
+    var legendSize = 14;
+    var legendSpacing = 4;
+    var legend = svg.selectAll('.legend')
+            .data(color.domain())
+            .enter()
+            .append('g')
+            .attr('class', 'legend')//
+            .attr('transform', function (d, i) {
+                var offset = 20 * color.domain().length / 2;
+                var horz = 30 + i * 100 + 10;
+                var vert = 15;
 
-        }
+
+                return 'translate(' + horz + ',' + vert + ')';
+            });
+    // These are the circles
+        legend.append('circle')
+                .attr('r', legendSize)
+                .style('fill', color)
+                .style('stroke', color)
+        console.log()
+        // These are the texts
+        legend.append('text')
+                .attr('x', legendSize + 5)
+                .attr('y', 10)
+                .text(function (d) {
+                    return d
+                })
+    }
 
 
 </script>
 <script>
     function regen(){
-            d3.csv($('#csv').val(), function (d){
+        d3.csv($('#csv').val(), function (d){
             var user = $("#user").val();
             if (d.who == user || user =='all')
-                    return d;
+                return d;
         }, function (data){
             generate_tree(data, '#treemap');
             surprise(data, '#surprise');
             draw_barchart(data, "#barcharttask", true);
             draw_barchart(data, "#barcharttime", false);
 
-            });
+        });
     }
 
     $(document).ready(function(){
