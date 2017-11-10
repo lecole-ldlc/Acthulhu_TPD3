@@ -24,6 +24,8 @@
         </div>
     </div>
 
+
+    <!-- Selectors creation -->
     <div class="container">
         <div class="row">
             <div class="col-lg-2">
@@ -71,31 +73,17 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-1">
-            </div>
-            <div class="col-lg-4">
-                <button type="button" class="btn btn-secondary">Priority</button>
-            </div>
-            <div class="col-lg-2">
-            </div>
-            <div class="col-lg-4">
-                <button type="button" class="btn btn-secondary">Status</button>
-            </div>
-            <div class="col-lg-1">
-            </div>
-        </div>
-    </div>
-
+    <!-- Areas creation -->
     <div class="container">
         <div class="row">
             <div class="col-lg-5">
+                <p class="border-test">Nombre de tâches en fonction de la priorité</p>
                 <svg id="barcharttask" width="430" height="400"></svg>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-1">
             </div>
             <div class="col-lg-5">
+                <p class="border-test">Temps necessaire des tâches en fonction du statut</p>
                 <svg id="barcharttime" width="430" height="400"></svg>
             </div>
         </div>
@@ -104,18 +92,17 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <p class="border-test">Treemap with priorities as colors and status as rectangles</p>
+                <p class="border-test">Treemap: couleurs = priorités / rectangles = statut</p>
                 <svg id="treemap" width="1000" height="800"></svg>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <div class="row" id="oui">
+        <div class="row">
             <div class="col-lg-12">
                 <p class="border-test">
-                    FREECHART<br>
-                    Surprise me  ! <br>
+                    Un bubble chart surprise apparaît // Rayon = temps
                 </p>
                 <svg id="surprise" width="1000" height="800"></svg>
 
@@ -138,7 +125,7 @@
         crossorigin="anonymous"></script>
 
 
-
+<!-- Treemap area creation -->
 <script>
     function generate_tree(data, element) {
         // Initialize SV
@@ -149,13 +136,13 @@
                 width = +svg.attr("width") - margin.left - margin.right,
                 height = +svg.attr("height") - margin.top - margin.bottom,
                 g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        // Color scale for categories
+        // Picking color domain
         var color = d3.scaleOrdinal(d3.schemeCategory10);
         // Prepare aggregation
         var nest = d3.nest()
                 .key(function (d) {
                     return d.priority;
-                }) // First we aggregate by prority
+                }) // Aggregation by priority
                 .key(function (d) {
                     return d.status;
                 }) // Then by status
@@ -173,6 +160,7 @@
                 .size([width, height])
                 .padding(1)
                 .round(true);
+        // Starting hierarchy
         var root = d3.hierarchy({
                     values: nest.entries(data)
                 }, function (d) {
@@ -277,25 +265,31 @@
                 })
     }
 
+    //Surprise function
+
     function surprise(tasks, element) {
         var user = $('#user').val();
         $(element).html("");
 
+        //Dedicated area creation
         var svg = d3.select("#surprise"),
                 width = +svg.attr("width"),
                 height = +svg.attr("height");
 
+        // visualization area initialisation
         var format = d3.format(",d");
         var color = d3.scaleOrdinal(d3.schemeCategory10);
         var pack = d3.pack()
                 .size([width, height])
                 .padding(1.5);
 
+        // Hierarchy inisialisation
         var root = d3.hierarchy({children: tasks})
                 .sum(function (d) {
                     return d.time;
                 });
 
+        // Data representation creation
         var node = svg.selectAll(".node")
                 .data(pack(root).leaves())
                 .enter().append("g")
@@ -303,6 +297,8 @@
                 .attr("transform", function (d) {
                     return "translate(" + d.x + "," + d.y + ")";
                 });
+
+        // Shaping data representation
         node.append("circle")
                 .attr("id", function (d) {
                     return d.data.id;
@@ -318,29 +314,28 @@
                     return d.data.id + "\n" + d.data.priority;
                 });
 
+        //Legend area creation
+        var legendSize = 14;
+        var legendSpacing = 4;
+        var legend = svg.selectAll('.legend')
+                .data(color.domain())
+                .enter()
+                .append('g')
+                .attr('class', 'legend')//
+                .attr('transform', function (d, i) {
+                    var offset = 20 * color.domain().length / 2;
+                    var horz = 30 + i * 100 + 10;
+                    var vert = 15;
 
-    var legendSize = 14;
-    var legendSpacing = 4;
-    var legend = svg.selectAll('.legend')
-            .data(color.domain())
-            .enter()
-            .append('g')
-            .attr('class', 'legend')//
-            .attr('transform', function (d, i) {
-                var offset = 20 * color.domain().length / 2;
-                var horz = 30 + i * 100 + 10;
-                var vert = 15;
 
-
-                return 'translate(' + horz + ',' + vert + ')';
-            });
-    // These are the circles
+                    return 'translate(' + horz + ',' + vert + ')';
+                });
+        // Circles creation and color filling
         legend.append('circle')
                 .attr('r', legendSize)
                 .style('fill', color)
                 .style('stroke', color)
-        console.log()
-        // These are the texts
+        // Texts creation and placement
         legend.append('text')
                 .attr('x', legendSize + 5)
                 .attr('y', 10)

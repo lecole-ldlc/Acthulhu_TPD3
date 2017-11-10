@@ -6,6 +6,8 @@
 .border-test {
     border-style: dotted;
     padding : 15px;
+	text-align : center;
+	font-weight: bold;
 }
 
 h1 {
@@ -42,7 +44,3 @@ p {
 	font-variant: normal;
 	font-weight: 400;
 	line-height: 20px;
-
-#oui {
-	padding-bottom="15";
-}
